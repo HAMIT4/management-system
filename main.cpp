@@ -15,7 +15,7 @@ class student{
 
 };
 
-void student::menu()
+void student::menu()    //simple window menu function
 // display menu
 {
     menustart:
@@ -43,7 +43,6 @@ void student::menu()
 
     switch(choice){
         case 1:
-
             do{
                 insert();
                 std::cout<<"\n\t\t\t Add Another Student (Y,N): ";
@@ -51,15 +50,17 @@ void student::menu()
                 // std::cout<< *ptr_x;
             }while (x=='y' || x=='Y');
             break;
-        
+        case 6:
+            exit(0);
         default:
             std::cout<< "\n\t\t Invalid choice ... Please try again"<<std::endl;
+            break;
     }
     getch();
     goto menustart;
 };
 
-void student::insert()
+void student::insert()  //function to add student details
 {
     system("cls"); //clear console screen
     std::fstream file;
@@ -79,6 +80,10 @@ void student::insert()
     std::cin>>email_id;
     std::cout<<"\t\t\t Enter Contact: ";
     std::cin>>contact_no;
+    // file system to store information
+    file.open("studentRecords.txt", std::ios::app | std::ios::out);
+    file<<" "<< name<< " "<<Adm_no<<" "<<course<<" "<<address<<" "<<email_id<<" "<<contact_no<<"\n";
+    file.close();
 
 };
 
