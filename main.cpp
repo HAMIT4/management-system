@@ -16,6 +16,8 @@ public:
     void insert();
     void display();
     void modify();
+    void search();
+    void deleted();
 };
 
 void student::menu() // simple window menu function
@@ -34,8 +36,8 @@ menustart:
     std::cout << "\t\t\t 1. Enter New Record" << std::endl;
     std::cout << "\t\t\t 2. Display Record" << std::endl;
     std::cout << "\t\t\t 3. Modify Record" << std::endl;
-    std::cout << "\t\t\t 4. Search New Record" << std::endl;
-    std::cout << "\t\t\t 5. Delete New Record" << std::endl;
+    std::cout << "\t\t\t 4. Search Record" << std::endl;
+    std::cout << "\t\t\t 5. Delete Record" << std::endl;
     std::cout << "\t\t\t 6. Exit" << std::endl;
 
     std::cout << "\t\t\t------------------------------------------" << std::endl;
@@ -60,6 +62,12 @@ menustart:
         break;
     case 3:
         modify();
+        break;
+    case 4:
+        search();
+        break;
+    case 5:
+        deleted();
         break;
     case 6:
         exit(0);
@@ -103,6 +111,7 @@ void student::display()
     system("cls");
     std::fstream file;
     int total = 0;
+    // int* ptotal = &total;
     std::cout << "\n\t\t --------------------------------------------------------------";
     std::cout << "\n\t\t --------------------Display Student Records--------------------" << std::endl;
     // opem file with records
@@ -136,7 +145,7 @@ void student::display()
     file.close();
 };
 
-void student::modify()
+void student::modify() //modify details by overwriting files and replacing
 {
     system("cls");
     std::fstream file, file1;
@@ -190,6 +199,91 @@ void student::modify()
         remove("studentRecords.txt");
         rename("Records.txt", "studentRecords.txt");
     }
+};
+
+
+void student::search() //search for record by comparing admission numbers in the file
+{
+    system("cls");
+    std::fstream file;
+    int found=0;
+    file.open("studentRecords.txt", std::ios::in);
+    if (!file)
+    {
+        std::cout << "\n\t\t --------------------------------------------------------------";
+        std::cout << "\n\t\t --------------------Modify Search Records---------------------" << std::endl;
+        std::cout<< "\n\t\t\t No Data present ...";
+    }else
+    {
+        std::string adm_no_temp;
+        std::cout << "\n\t\t --------------------------------------------------------------";
+        std::cout << "\n\t\t --------------------Modify Student Records--------------------" << std::endl;
+        std::cout<< "\n Enter Admission number of Student you want to seach: ";
+        std::cin>>adm_no_temp;
+        file >> name >> Adm_no >> course >> address >> email_id >> contact_no;
+        while(!file.eof())
+        {
+            if (adm_no_temp == Adm_no)
+            {
+                std::cout << "\n\t\t\t Student Name. " << name << std::endl;
+                std::cout << "\t\t\t Student Adm_no. " << Adm_no << std::endl;
+                std::cout << "\t\t\t Student Course. " << course << std::endl;
+                std::cout << "\t\t\t Student address. " << address << std::endl;
+                std::cout << "\t\t\t Student email_id. " << email_id << std::endl;
+                std::cout << "\t\t\t Student Contact. " << contact_no << std::endl;
+                found++;
+            }
+        file >> name >> Adm_no >> course >> address >> email_id >> contact_no;
+        }
+        if (found ==0)
+        {
+            std::cout<<"\n\t\t\t Information not found Confirm the admission No and try again!";
+        }
+        file.close();
+    }
+};
+
+
+void student::deleted()
+{
+    system("cls");
+    std::fstream file, file1;
+    std::string tempA;
+    int found =0;
+    std::cout << "\n\t\t --------------------------------------------------------------";
+    std::cout << "\n\t\t --------------------Delete Student Details--------------------" << std::endl;
+    file.open("studentRecords.txt", std::ios::in);
+    if (!file)
+    {
+        std::cout<<"\n\t\t\tNo Data present ...";
+    }else 
+    {
+        std::cout<<"\n\t\t\t Enter Admission No. of student you want to delete: ";
+        std::cin>>tempA;
+        file1.open("Records.txt", std::ios::app | std::ios::out);
+        file >> name >> Adm_no >> course >> address >> email_id >> contact_no;
+        while(!file.eof())
+        {
+            if (tempA != Adm_no)
+            { //copy the data
+                file1 << " " << name << " " << Adm_no << " " << course << " " << address << " " << email_id << " " << contact_no << "\n";
+            }else
+            {
+                found++;
+                std::cout<<"\n\t\t\t Student Detaials deleted successfully ...";
+            }
+            file >> name >> Adm_no >> course >> address >> email_id >> contact_no;
+        }
+        if (found==0)
+        {
+            std::cout<<"\n\t\t\t Student details not found, Confirm the Admission No. ...";
+        }
+        file1.close();
+        file.close();
+        remove("studentRecords.txt");
+        rename("Records.txt", "studentRecords.txt");
+    }
+
 };
 
 int main()
